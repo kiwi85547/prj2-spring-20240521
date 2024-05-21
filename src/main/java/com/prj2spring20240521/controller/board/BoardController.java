@@ -12,6 +12,7 @@ import java.util.List;
 @RequestMapping("/api/board")
 @RequiredArgsConstructor
 public class BoardController {
+
     private final BoardService service;
 
     @PostMapping("add")
@@ -49,11 +50,6 @@ public class BoardController {
     }
 
     @PutMapping("edit")
-    public void put(@RequestBody Board board) {
-        service.edit(board);
-    }
-
-    @PostMapping("edit")
     public ResponseEntity edit(@RequestBody Board board) {
         if (service.validate(board)) {
             service.edit(board);
