@@ -31,9 +31,15 @@ public class BoardController {
 
     // /api/board/5
     @GetMapping("{id}")
-    public Board get(@PathVariable Integer id) throws Exception {
+    public ResponseEntity get(@PathVariable Integer id) throws Exception {
         // react에서 Spinner 보려고 일부러 쓰레드 걸었음
 //        Thread.sleep(1000);
-        return service.get(id);
+
+
+        Board board = service.get(id);
+        if (board == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok().body(board);
     }
 }
