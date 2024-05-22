@@ -15,12 +15,12 @@ public interface MemberMapper {
     public int insert(Member member);
 
     @Select("""
-            SELECT * FROM member WHERE email=#{email}")"
+            SELECT * FROM member WHERE email=#{email}
             """)
     Member selectByEmail(String email);
 
     @Select("""
-            SELECT * FROM member WHERE nick_name=#{nickName}")"
+            SELECT * FROM member WHERE nick_name=#{nickName}
             """)
     Member selectByNickName(String nickName);
 }
