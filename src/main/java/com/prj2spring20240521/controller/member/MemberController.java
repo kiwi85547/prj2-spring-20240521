@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 //@ResponseBody + @Controller
 @RestController
 @RequiredArgsConstructor
@@ -44,6 +46,20 @@ public class MemberController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(nickName);
+    }
 
+    @GetMapping("list")
+    public List<Member> list() {
+        return service.getList();
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity get(@PathVariable Integer id) {
+        Member member = service.getById(id);
+        if (member == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(member);
+        }
     }
 }
