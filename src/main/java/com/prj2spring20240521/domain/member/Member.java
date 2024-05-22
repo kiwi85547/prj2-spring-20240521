@@ -13,8 +13,10 @@ public class Member {
     private String nickName;
     private LocalDateTime inserted;
 
-    private String getSignupDateAndTime() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH:mm:ss");
-        return inserted.format(dateTimeFormatter);
+    public String getSignupDateAndTime() {
+        DateTimeFormatter formatter
+                = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+
+        return inserted.format(formatter);
     }
 }
