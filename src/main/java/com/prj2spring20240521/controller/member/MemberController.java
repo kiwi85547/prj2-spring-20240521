@@ -92,8 +92,10 @@ public class MemberController {
     public ResponseEntity token(@RequestBody Member member) {
         Map<String, Object> map = service.getToken(member);
         if (map == null) {
+            // 401 Unauthorized
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+        // 200 ok
         return ResponseEntity.ok(map);
     }
 

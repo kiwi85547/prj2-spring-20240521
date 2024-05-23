@@ -8,7 +8,7 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     @Insert("""
-            INSERT INTO board(title,content,writer) VALUES (#{title},#{content},#{writer})
+            INSERT INTO board(title,content,member_id) VALUES (#{title},#{content},#{memberId})
             """)
     public int insert(Board board);
 
