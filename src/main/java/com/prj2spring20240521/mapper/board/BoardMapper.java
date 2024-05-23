@@ -13,7 +13,7 @@ public interface BoardMapper {
     public int insert(Board board);
 
     @Select("""
-            SELECT id,title,writer FROM  board ORDER BY id DESC
+            SELECT b.id, b.title, m.nick_name writer FROM board b JOIN member m WHERE b.member_id=m.id ORDER BY id DESC
             """)
     List<Board> selectAll();
 
@@ -28,7 +28,7 @@ public interface BoardMapper {
     int deleteById(Integer id);
 
     @Update("""
-            UPDATE board SET title=#{title},content=#{content},writer=#{writer} WHERE id=#{id}
+            UPDATE board SET title=#{title},content=#{content},member_id=#{memberId} WHERE id=#{id}
             """)
     int update(Board board);
 }
