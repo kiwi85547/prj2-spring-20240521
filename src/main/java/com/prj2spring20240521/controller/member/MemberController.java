@@ -3,10 +3,12 @@ package com.prj2spring20240521.controller.member;
 import com.prj2spring20240521.domain.member.Member;
 import com.prj2spring20240521.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 //@ResponseBody + @Controller
 @RestController
@@ -64,7 +66,35 @@ public class MemberController {
     }
 
     @DeleteMapping("{id}")
-    public void delete(@PathVariable Integer id) {
-        service.remove(id);
+    public ResponseEntity delete(@RequestBody Member member) {
+        if (service.hasAccess(member)) {
+            service.remove(member.getId());
+            return ResponseEntity.ok().build();
+        }
+
+        // todo : forbidden으로 수정하기
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+    // 여기서부터 수업 못들었음 #################################################
+
+    @PutMapping("modify")
+    public ResponseEntity modify(@RequestBody Member member) {
+        if (service.hasAccessModify(member)) {
+            service.modify(member);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+    // 여기까지 수업 못들었음 #################################################
+
+    @PostMapping("token")
+    public ResponseEntity token(@RequestBody Member member) {
+        Map<String, Object> map = service.getToken(member);
+        if (map == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(map);
+    }
+
 }
