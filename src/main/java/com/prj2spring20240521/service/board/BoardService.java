@@ -21,7 +21,6 @@ public class BoardService {
     // email에서 id로 바꾸면서 Member member = memberMapper.selectByEmail(authentication.getName()); 코드 삭제
     public void add(Board board, Authentication authentication) {
         board.setMemberId(Integer.valueOf(authentication.getName()));
-
         mapper.insert(board);
     }
 
@@ -50,5 +49,12 @@ public class BoardService {
 
     public void edit(Board board) {
         mapper.update(board);
+    }
+
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        Board board = mapper.selectById(id);
+
+        return board.getMemberId()
+                .equals(Integer.valueOf(authentication.getName()));
     }
 }

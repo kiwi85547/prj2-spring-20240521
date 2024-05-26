@@ -44,7 +44,6 @@ public class MemberController {
 
     @GetMapping(value = "check", params = "nickName")
     public ResponseEntity checkNickName(@RequestParam("nickName") String nickName) {
-        System.out.println("nickName = " + nickName);
         Member member = service.getByNickName(nickName);
         if (member == null) {
             return ResponseEntity.notFound().build();
@@ -53,12 +52,18 @@ public class MemberController {
     }
 
     @GetMapping("list")
+    @PreAuthorize("hasAuthority('SCOPE_admin')")
     public List<Member> list() {
         return service.getList();
     }
 
     @GetMapping("{id}")
-    public ResponseEntity get(@PathVariable Integer id) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity get(@PathVariable Integer id, Authentication authentication) {
+        if (!service.hasAccess(id, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Member member = service.getById(id);
         if (member == null) {
             return ResponseEntity.notFound().build();
@@ -78,17 +83,20 @@ public class MemberController {
         // 남의 것을 지우려고 할 때 403 응답받기
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
-    // 여기서부터 수업 못들었음 #################################################
+    // 5월 23일?? 오전 반차 쓴 날, 여기서부터 수업 못들었음 #################################################
 
     @PutMapping("modify")
-    public ResponseEntity modify(@RequestBody Member member) {
-        if (service.hasAccessModify(member)) {
-            service.modify(member);
-            return ResponseEntity.ok().build();
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity modify(@RequestBody Member member,
+                                 Authentication authentication) {
+        if (service.hasAccessModify(member, authentication)) {
+            Map<String, Object> result = service.modify(member, authentication);
+            return ResponseEntity.ok(result);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
+
     // 여기까지 수업 못들었음 #################################################
 
     @PostMapping("token")

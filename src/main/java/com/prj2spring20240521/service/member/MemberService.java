@@ -1,10 +1,12 @@
 package com.prj2spring20240521.service.member;
 
 import com.prj2spring20240521.domain.member.Member;
+import com.prj2spring20240521.mapper.board.BoardMapper;
 import com.prj2spring20240521.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
@@ -15,6 +17,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -24,6 +27,7 @@ public class MemberService {
     private final MemberMapper mapper;
     final BCryptPasswordEncoder passwordEncoder;
     private final JwtEncoder jwtEncoder;
+    private final BoardMapper boardMapper;
 
 
     public void add(Member member) {
@@ -52,7 +56,9 @@ public class MemberService {
         if (member.getPassword() == null || member.getPassword().isBlank()) {
             return false;
         }
+
         String emailPattern = "[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*";
+
         if (!member.getEmail().trim().matches(emailPattern)) {
             return false;
         }
@@ -69,6 +75,10 @@ public class MemberService {
     }
 
     public void remove(Integer id) {
+        // board 테이블에서 작성한 글 지우기
+        boardMapper.deleteByMemberId(id);
+
+        // member 테이블에서 지우기
         mapper.deleteById(id);
     }
 
@@ -87,7 +97,7 @@ public class MemberService {
     }
 
     // 여기서부터 수업 못들었음 #################################################
-    public void modify(Member member) {
+    public Map<String, Object> modify(Member member, Authentication authentication) {
         if (member.getPassword() != null && member.getPassword().length() > 0) {
             // 패스워드가 입력되었으니 바꾸기
             member.setPassword(passwordEncoder.encode(member.getPassword()));
@@ -97,9 +107,25 @@ public class MemberService {
             member.setPassword(dbMember.getPassword());
         }
         mapper.update(member);
+
+        String token = "";
+
+        Jwt jwt = (Jwt) authentication.getPrincipal();
+        Map<String, Object> claims = jwt.getClaims();
+        JwtClaimsSet.Builder jwtClaimsSetBuilder = JwtClaimsSet.builder();
+        claims.forEach(jwtClaimsSetBuilder::claim);
+        jwtClaimsSetBuilder.claim("nickName", member.getNickName());
+
+        JwtClaimsSet jwtClaimsSet = jwtClaimsSetBuilder.build();
+        token = jwtEncoder.encode(JwtEncoderParameters.from(jwtClaimsSet)).getTokenValue();
+        return Map.of("token", token);
     }
 
-    public boolean hasAccessModify(Member member) {
+    public boolean hasAccessModify(Member member, Authentication authentication) {
+        if (!authentication.getName().equals(member.getId().toString())) {
+            return false;
+        }
+
         Member dbMember = mapper.selectById(member.getId());
         if (dbMember == null) {
             return false;
@@ -126,6 +152,14 @@ public class MemberService {
             if (passwordEncoder.matches(member.getPassword(), db.getPassword())) {
                 result = new HashMap<>();
                 String token = "";
+                Instant now = Instant.now();
+
+                List<String> authority = mapper.selectAuthorityByMemberId(db.getId());
+
+                String authorityString = authority.stream()
+                        .collect(Collectors.joining(" "));
+
+
                 // https://github.com/spring-projects/
                 JwtClaimsSet claims = JwtClaimsSet.builder()
                         .issuer("self")
@@ -145,6 +179,16 @@ public class MemberService {
             }
         }
         return result;
+    }
+
+    public boolean hasAccess(Integer id, Authentication authentication) {
+        boolean self = authentication.getName().equals(id.toString());
+
+        boolean isAdmin = authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("SCOPE_admin"));
+
+        return self || isAdmin;
     }
 
 }

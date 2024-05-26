@@ -32,4 +32,10 @@ public interface BoardMapper {
             UPDATE board SET title=#{title},content=#{content},member_id=#{memberId} WHERE id=#{id}
             """)
     int update(Board board);
+
+    @Delete("""
+            DELETE FROM board
+            WHERE member_id=#{memberId}
+            """)
+    int deleteByMemberId(Integer memberId);
 }
