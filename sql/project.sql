@@ -24,6 +24,7 @@ FROM board;
 desc board;
 SELECT *
 FROM member;
+desc member;
 
 # board 테이블 수정
 # writer column 지우기

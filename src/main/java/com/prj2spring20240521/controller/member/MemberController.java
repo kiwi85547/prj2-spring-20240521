@@ -5,6 +5,8 @@ import com.prj2spring20240521.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -66,14 +68,15 @@ public class MemberController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity delete(@RequestBody Member member) {
-        if (service.hasAccess(member)) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity delete(@RequestBody Member member, Authentication authentication) {
+        if (service.hasAccess(member, authentication)) {
             service.remove(member.getId());
             return ResponseEntity.ok().build();
         }
 
-        // todo : forbidden으로 수정하기
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        // 남의 것을 지우려고 할 때 403 응답받기
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
     // 여기서부터 수업 못들었음 #################################################
 
