@@ -1,7 +1,6 @@
 package com.prj2spring20240521.service.board;
 
 import com.prj2spring20240521.domain.board.Board;
-import com.prj2spring20240521.domain.member.Member;
 import com.prj2spring20240521.mapper.board.BoardMapper;
 import com.prj2spring20240521.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +18,9 @@ public class BoardService {
     private final MemberMapper memberMapper;
 
     // Authentication에 subject로 넘겨준 email이 들어있음
+    // email에서 id로 바꾸면서 Member member = memberMapper.selectByEmail(authentication.getName()); 코드 삭제
     public void add(Board board, Authentication authentication) {
-        Member member = memberMapper.selectByEmail(authentication.getName());
-        board.setMemberId(member.getId());
+        board.setMemberId(Integer.valueOf(authentication.getName()));
 
         mapper.insert(board);
     }
