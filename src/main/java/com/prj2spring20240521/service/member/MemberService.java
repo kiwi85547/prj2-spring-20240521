@@ -109,7 +109,7 @@ public class MemberService {
 
     // 여기까지 수업 못들었음 #################################################
 
-    public Map<String, Object> getToken(Member member) {
+    public Map<String, Object> getToken(Member member) { //Member 객체는 컨트롤러에서 전달받은 것
 
         Map<String, Object> result = null;
 
@@ -127,7 +127,8 @@ public class MemberService {
                         // now가 안되서 Instant.now()로 바꿈
                         .issuedAt(Instant.now())
                         .expiresAt(Instant.now().plusSeconds(60 * 60 * 24 * 7)) // 만료기한 여기선 일주일
-                        .subject(member.getEmail()) // 사용자의 id, email 등
+                        // 회원가입시 id를 받지 않았기 때문에 db에서 조회해야 함
+                        .subject(db.getId().toString()) // 사용자의 id, email 등.
                         .claim("scope", "") // 권한
                         .claim("nickName", db.getNickName())
                         .build();

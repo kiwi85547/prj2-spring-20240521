@@ -89,7 +89,7 @@ public class MemberController {
     // 여기까지 수업 못들었음 #################################################
 
     @PostMapping("token")
-    public ResponseEntity token(@RequestBody Member member) {
+    public ResponseEntity token(@RequestBody Member member) { // 회원가입 시 받은 이메일,패스워드
         Map<String, Object> map = service.getToken(member);
         if (map == null) {
             // 401 Unauthorized

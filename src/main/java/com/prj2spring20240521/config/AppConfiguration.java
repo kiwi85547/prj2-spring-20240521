@@ -58,5 +58,6 @@ public class AppConfiguration {
     @Bean
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(this.key).build();
+
     }
 }
