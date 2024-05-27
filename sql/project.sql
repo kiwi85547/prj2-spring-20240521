@@ -85,3 +85,6 @@ FROM authority;
 DELETE
 FROM authority;
 
+UPDATE member
+SET nick_name='abcd'
+WHERE id = 39;

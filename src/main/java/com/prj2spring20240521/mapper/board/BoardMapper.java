@@ -40,11 +40,26 @@ public interface BoardMapper {
     int deleteByMemberId(Integer memberId);
 
     @Select("""
-            SELECT b.id, b.title, m.nick_name writer FROM board b JOIN member m ON b.member_id = m.id 
+            <script>
+            SELECT b.id, b.title, m.nick_name writer 
+            FROM board b JOIN member m ON b.member_id = m.id 
+            <trim prefix="WHERE" prefixOverrides="OR">
+                <if test="searchType != null">
+            <bind name="pattern" value="'%'+keyword+'%'"/>    
+            <if test="searchType == 'all' || searchType == 'text'">
+            OR b.title LIKE #{pattern}
+            OR b.content LIKE #{pattern}
+            </if>
+            <if test ="searchType == 'all' || searchType == 'nickName'" >
+            OR m.nick_name LIKE #{pattern}
+                 </if>
+              </if>
+            </trim>
             ORDER BY b.id DESC
             LIMIT #{offset},10
-            """)
-    List<Board> selectAllPaging(Integer offset);
+            </script>
+                    """)
+    List<Board> selectAllPaging(Integer offset, String searchType, String keyword);
 
     @Select("""
             SELECT COUNT(*) FROM board
