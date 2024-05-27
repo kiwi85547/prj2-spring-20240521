@@ -47,14 +47,14 @@ ORDER BY id DESC;
 
 SELECT *
 FROM member
-WHERE email = 'qq@qq';
+WHERE email = '456@456';
 
 DELETE
 FROM board
-WHERE member_id = 9;
+WHERE member_id = 37;
 DELETE
 FROM member
-WHERE email = 'qq@qq';
+WHERE email = '456@456';
 
 # 권한 테이블
 CREATE TABLE authority
@@ -65,4 +65,23 @@ CREATE TABLE authority
 );
 
 INSERT INTO authority (member_id, name)
-VALUES (1, 'admin');
+VALUES (39, 'admin');
+
+INSERT INTO board (title, content, member_id)
+SELECT title, content, member_id
+FROM board;
+
+INSERT INTO board (title, content, member_id)
+VALUES ('안녕하세요', '게시물', 39);
+
+DELETE
+FROM member;
+SELECT *
+FROM member;
+SELECT *
+FROM board;
+SELECT *
+FROM authority;
+DELETE
+FROM authority;
+

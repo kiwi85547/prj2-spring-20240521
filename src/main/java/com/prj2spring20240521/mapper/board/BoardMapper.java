@@ -13,7 +13,7 @@ public interface BoardMapper {
     public int insert(Board board);
 
     @Select("""
-            SELECT b.id, b.title, m.nick_name writer FROM board b JOIN member m WHERE b.member_id=m.id ORDER BY id DESC
+            SELECT b.id, b.title, m.nick_name writer FROM board b JOIN member m ON b.member_id=m.id ORDER BY id DESC
             """)
     List<Board> selectAll();
 
@@ -38,4 +38,16 @@ public interface BoardMapper {
             WHERE member_id=#{memberId}
             """)
     int deleteByMemberId(Integer memberId);
+
+    @Select("""
+            SELECT b.id, b.title, m.nick_name writer FROM board b JOIN member m ON b.member_id = m.id 
+            ORDER BY b.id DESC
+            LIMIT #{offset},10
+            """)
+    List<Board> selectAllPaging(Integer offset);
+
+    @Select("""
+            SELECT COUNT(*) FROM board
+            """)
+    Integer countAll();
 }
