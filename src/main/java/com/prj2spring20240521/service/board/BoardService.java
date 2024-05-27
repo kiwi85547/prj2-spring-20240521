@@ -45,6 +45,8 @@ public class BoardService {
         Integer leftPageNumber = (page - 1) / 10 * 10 + 1;
         Integer rightPageNumber = leftPageNumber + 9;
 
+        // rightPageNumber는 lastPageNumber 보다 크지 않도록
+        
         pageInfo.put("currentPageNumber", page);
         pageInfo.put("lastPageNumber", lastPageNumber);
         pageInfo.put("leftPageNumber", leftPageNumber);

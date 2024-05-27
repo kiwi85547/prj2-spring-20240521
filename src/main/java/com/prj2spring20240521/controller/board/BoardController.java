@@ -32,6 +32,7 @@ public class BoardController {
         }
     }
 
+    // /api/board/list?1
     @GetMapping("list")
     public Map<String, Object> list(@RequestParam(defaultValue = "1") Integer page) {
         return service.list(page);
