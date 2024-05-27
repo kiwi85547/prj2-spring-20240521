@@ -25,7 +25,7 @@ public interface MemberMapper {
     Member selectByNickName(String nickName);
 
     @Select("""
-            SELECT id,email,nick_name,inserted FROM member ORDER BY id DESC
+            SELECT id,email,nick_name,inserted FROM member
             """)
     List<Member> selectAll();
 

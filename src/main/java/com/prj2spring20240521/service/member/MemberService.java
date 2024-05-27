@@ -66,7 +66,7 @@ public class MemberService {
 
     }
 
-    public List<Member> getList() {
+    public List<Member> list() {
         return mapper.selectAll();
     }
 
@@ -164,11 +164,11 @@ public class MemberService {
                 JwtClaimsSet claims = JwtClaimsSet.builder()
                         .issuer("self")
                         // now가 안되서 Instant.now()로 바꿈
-                        .issuedAt(Instant.now())
-                        .expiresAt(Instant.now().plusSeconds(60 * 60 * 24 * 7)) // 만료기한 여기선 일주일
+                        .issuedAt(now)
+                        .expiresAt(now.plusSeconds(60 * 60 * 24 * 7)) // 만료기한 여기선 일주일
                         // 회원가입시 id를 받지 않았기 때문에 db에서 조회해야 함
                         .subject(db.getId().toString()) // 사용자의 id, email 등.
-                        .claim("scope", "") // 권한
+                        .claim("scope", authorityString) // 권한
                         .claim("nickName", db.getNickName())
                         .build();
 

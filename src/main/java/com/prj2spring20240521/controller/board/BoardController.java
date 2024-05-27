@@ -64,7 +64,7 @@ public class BoardController {
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
     // @PathVariable : URL 경로 변수의 값을 메서드 파라미터로 바인딩해준다.
-    public ResponseEntity<Object> delete(@PathVariable Integer id, Authentication authentication) {
+    public ResponseEntity delete(@PathVariable Integer id, Authentication authentication) {
         if (service.hasAccess(id, authentication)) {
             service.remove(id);
             return ResponseEntity.ok().build();
