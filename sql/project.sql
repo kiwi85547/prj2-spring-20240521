@@ -85,6 +85,12 @@ FROM authority;
 DELETE
 FROM authority;
 
-UPDATE member
-SET nick_name='abcd'
-WHERE id = 39;
+UPDATE board
+SET title='thank you'
+WHERE id % 3 = 0;
+UPDATE board
+SET title='Lucky!'
+WHERE id % 3 = 1;
+UPDATE board
+SET title='Love you~'
+WHERE id % 3 = 2;
