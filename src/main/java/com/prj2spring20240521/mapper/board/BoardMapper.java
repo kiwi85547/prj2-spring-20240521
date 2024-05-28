@@ -92,4 +92,9 @@ public interface BoardMapper {
             INSERT INTO board_file (board_id, name) VALUES (#{boardId}, #{name})
             """)
     void insertFileName(Integer boardId, String name);
+
+    @Select("""
+            SELECT name FROM board_file WHERE board_id=#{boardId}
+            """)
+    List<String> selectFileNameByBoardId(Integer boardId);
 }
