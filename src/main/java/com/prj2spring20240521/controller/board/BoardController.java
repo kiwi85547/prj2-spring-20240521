@@ -84,12 +84,10 @@ public class BoardController {
     public ResponseEntity edit(Board board,
                                @RequestParam(value = "removeFileList[]", required = false)
                                List<String> removeFileList,
-                               @RequestParam(value = "addFIleList[]", required = false)
-                               MultipartFile[] addFIleList,
-                               Authentication authentication) {
+                               @RequestParam(value = "addFileList[]", required = false)
+                               MultipartFile[] addFileList,
+                               Authentication authentication) throws IOException {
 
-        System.out.println("board = " + board);
-        System.out.println("removeFileList = " + removeFileList);
         if (!service.hasAccess(board.getId(), authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
