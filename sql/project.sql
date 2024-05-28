@@ -94,3 +94,11 @@ WHERE id % 3 = 1;
 UPDATE board
 SET title='Love you~'
 WHERE id % 3 = 2;
+
+
+CREATE TABLE board_file
+(
+    board_id INT          NOT NULL REFERENCES board (id),
+    name     VARCHAR(500) NOT NULL,
+    PRIMARY KEY (board_id, name)
+)
