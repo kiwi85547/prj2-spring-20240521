@@ -12,4 +12,6 @@ public class Board {
     private String writer; // 작성자 nickName으로 사용하기
     private Integer memberId;
     private LocalDateTime inserted;
+
+
 }
