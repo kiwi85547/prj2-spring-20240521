@@ -50,8 +50,6 @@ public class BoardService {
                 file.transferTo(destination);
             }
         }
-
-
     }
 
     public boolean validate(Board board) {
@@ -133,9 +131,23 @@ public class BoardService {
         mapper.deleteById(id);
     }
 
-    public void edit(Board board) {
+    public void edit(Board board, List<String> removeFileList) {
+        // disk의 파일 삭제
+        if (removeFileList != null && removeFileList.size() > 0) {
+
+            for (String fileName : removeFileList) {
+
+                String path = STR."C:/Temp/prj2/\{board.getId()}/\{fileName}";
+                File file = new File(path);
+                file.delete();
+                // db records 삭제
+
+                mapper.deleteFileByBoardIdAndName(board.getId(), fileName);
+            }
+        }
         mapper.update(board);
     }
+
 
     public boolean hasAccess(Integer id, Authentication authentication) {
         Board board = mapper.selectById(id);
