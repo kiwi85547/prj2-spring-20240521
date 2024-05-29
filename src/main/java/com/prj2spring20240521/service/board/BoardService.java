@@ -48,7 +48,7 @@ public class BoardService {
                 // db에 해당 게시물의 파일 목록 저장
                 mapper.insertFileName(board.getId(), file.getOriginalFilename());
                 // 실제 파일 저장(s3)
-                String key = STR."pr2/board/\{board.getId()}/\{file.getOriginalFilename()}";
+                String key = STR."prj2/\{board.getId()}/\{file.getOriginalFilename()}";
                 PutObjectRequest objectRequest = PutObjectRequest.builder()
                         .bucket(bucketName)
                         .key(key)
@@ -109,7 +109,7 @@ public class BoardService {
         Board board = mapper.selectById(id);
         List<String> filesNames = mapper.selectFileNameByBoardId(id);
         List<BoardFile> files = filesNames.stream()
-                .map(name -> new BoardFile(name, STR."\{srcPrefix}/\{id}/\{name}"))
+                .map(name -> new BoardFile(name, STR."\{srcPrefix}\{id}/\{name}"))
                 .toList();
 
         board.setFileList(files);
