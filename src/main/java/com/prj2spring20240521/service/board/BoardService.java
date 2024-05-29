@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.S3Client;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class BoardService {
     private final BoardMapper mapper;
     private final MemberMapper memberMapper;
+    final S3Client s3Client;
 
     // Authentication에 subject로 넘겨준 email이 들어있음
     // email에서 id로 바꾸면서 Member member = memberMapper.selectByEmail(authentication.getName()); 코드 삭제
