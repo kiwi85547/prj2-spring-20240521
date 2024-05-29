@@ -47,25 +47,25 @@ public class BoardController {
 
     // /api/board/5
     @GetMapping("{id}")
-    public ResponseEntity get(@PathVariable Integer id) throws Exception {
-        // react에서 Spinner 보려고 일부러 쓰레드 걸었음
-//        Thread.sleep(1000);
+    public ResponseEntity get(@PathVariable Integer id
+            , Authentication authentication) throws Exception {
+        Map<String, Object> result = service.get(id, authentication);
 
-
-        Board board = service.get(id);
-        if (board == null) {
-            // notFound() : 404 Not Found 상태 코드를 가진 ResponseEntity 객체를 생성하기 위한 정적 팩토리 메소드.
-            // 메소드 호출 시, ResponseEntity.BodyBuilder 타입의 인스턴스가 반환된다.
-            // .build() : 실제 ResponseEntity 객체 생성됨
+        if (result.get("board") == null) {
             return ResponseEntity.notFound().build();
         }
+        return ResponseEntity.ok().body(result);
+
+        // notFound() : 404 Not Found 상태 코드를 가진 ResponseEntity 객체를 생성하기 위한 정적 팩토리 메소드.
+        // 메소드 호출 시, ResponseEntity.BodyBuilder 타입의 인스턴스가 반환된다.
+        // .build() : 실제 ResponseEntity 객체 생성됨
+
         // .ok() : HTTP 200 OK 상태 코드를 가진 ResponseEntity를 생성하기 위한 정적 팩토리 메소드.
         // 메소드 호출 시, ResponseEntity.BodyBuilder 타입의 인스턴스가 반환된다.
         // .ok(board)는 안됨. ok()는 메서드
         // .body(board) : 응답 본문에 들어갈 객체를 전달. 실제 ResponseEntity 객체 생성됨
 
 // ResponseEntity에서는 상황에 따라 build()를 호출하기도 하고, body()와 같은 메서드로 직접 ResponseEntity를 생성하기도 함. 모두 빌더 패턴의 개념을 사용한 것
-        return ResponseEntity.ok().body(board);
     }
 
     @DeleteMapping("{id}")
