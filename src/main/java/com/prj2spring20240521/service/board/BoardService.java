@@ -16,7 +16,6 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -141,16 +140,17 @@ public class BoardService {
     }
 
     public void edit(Board board, List<String> removeFileList, MultipartFile[] addFileList) throws IOException {
-        // disk의 파일 삭제
+
         if (removeFileList != null && removeFileList.size() > 0) {
-
             for (String fileName : removeFileList) {
-
-                String path = STR."C:/Temp/prj2/\{board.getId()}/\{fileName}";
-                File file = new File(path);
-                file.delete();
+                // s3 에 있는 file 삭제
+                String key = STR."prj2/\{board.getId()}/\{fileName}";
+                DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .build();
+                s3Client.deleteObject(objectRequest);
                 // db records 삭제
-
                 mapper.deleteFileByBoardIdAndName(board.getId(), fileName);
             }
         }
@@ -163,19 +163,18 @@ public class BoardService {
                     // 새 파일이 기존에 없을 때만 db에 추가
                     mapper.insertFileName(board.getId(), fileName);
                 }
-                // disk 에 쓰기
-                File dir = new File(STR."C:/Temp/prj2/\{board.getId()}");
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
+                // s3 에 쓰기
+                String key = STR."prj2/\{board.getId()}/\{fileName}";
+                PutObjectRequest objectRequest = PutObjectRequest.builder()
+                        .bucket(bucketName)
+                        .key(key)
+                        .acl(ObjectCannedACL.PUBLIC_READ) // 밖에서 볼 수 있게
+                        .build();
 
-                String path = STR."C:/Temp/prj2/\{board.getId()}/\{fileName}";
-                File destination = new File(path);
-                file.transferTo(destination);
+                s3Client.putObject(objectRequest,
+                        RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             }
         }
-
-
         mapper.update(board);
     }
 
