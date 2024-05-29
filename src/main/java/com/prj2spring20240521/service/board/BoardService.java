@@ -32,6 +32,9 @@ public class BoardService {
     @Value("${aws.s3.bucket.name}")
     String bucketName;
 
+    @Value("${image.src.prefix}")
+    String srcPrefix;
+
     // Authentication에 subject로 넘겨준 email이 들어있음
     // email에서 id로 바꾸면서 Member member = memberMapper.selectByEmail(authentication.getName()); 코드 삭제
     public void add(Board board, MultipartFile[] files, Authentication authentication) throws IOException {
@@ -106,7 +109,7 @@ public class BoardService {
         Board board = mapper.selectById(id);
         List<String> filesNames = mapper.selectFileNameByBoardId(id);
         List<BoardFile> files = filesNames.stream()
-                .map(name -> new BoardFile(name, STR."http://192.168.224.1:8888/\{id}/\{name}"))
+                .map(name -> new BoardFile(name, STR."\{srcPrefix}/\{id}/\{name}"))
                 .toList();
 
         board.setFileList(files);
