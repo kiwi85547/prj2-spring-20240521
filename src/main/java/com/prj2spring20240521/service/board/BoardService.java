@@ -201,7 +201,7 @@ public class BoardService {
             result.put("like", true);
         }
         result.put("count", mapper.selectCountLikeByBoardId(boardId));
-
+//        result.put("like",mapper.count)
         return result;
     }
 }

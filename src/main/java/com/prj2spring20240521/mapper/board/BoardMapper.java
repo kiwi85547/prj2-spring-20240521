@@ -128,4 +128,6 @@ public interface BoardMapper {
             SELECT COUNT(*) FROM board_like WHERE board_id=#{boardId}
             """)
     int selectCountLikeByBoardId(Integer boardId);
+
+
 }
