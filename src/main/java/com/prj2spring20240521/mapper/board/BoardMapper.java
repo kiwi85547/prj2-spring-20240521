@@ -41,26 +41,27 @@ public interface BoardMapper {
     int deleteByMemberId(Integer memberId);
 
     @Select("""
-            <script>
-            SELECT b.id, b.title, m.nick_name writer, COUNT(f.name) number_of_images 
-            FROM board b JOIN member m ON b.member_id = m.id LEFT JOIN board_file f ON b.id=f.board_id
-            <trim prefix="WHERE" prefixOverrides="OR">
-                <if test="searchType != null">
-            <bind name="pattern" value="'%'+keyword+'%'"/>    
-            <if test="searchType == 'all' || searchType == 'text'">
-            OR b.title LIKE #{pattern}
-            OR b.content LIKE #{pattern}
-            </if>
-            <if test ="searchType == 'all' || searchType == 'nickName'" >
-            OR m.nick_name LIKE #{pattern}
+                 <script>
+                 SELECT b.id, b.title, m.nick_name writer, COUNT(f.name) number_of_images, 
+            (SELECT COUNT(*) FROM board_like l WHERE l.board_id = b.id) number_of_like 
+                 FROM board b JOIN member m ON b.member_id = m.id LEFT JOIN board_file f ON b.id=f.board_id
+                 <trim prefix="WHERE" prefixOverrides="OR">
+                     <if test="searchType != null">
+                 <bind name="pattern" value="'%'+keyword+'%'"/>    
+                 <if test="searchType == 'all' || searchType == 'text'">
+                 OR b.title LIKE #{pattern}
+                 OR b.content LIKE #{pattern}
                  </if>
-              </if>
-            </trim>
-            GROUP BY b.id
-            ORDER BY b.id DESC
-            LIMIT #{offset},10
-            </script>
-                    """)
+                 <if test ="searchType == 'all' || searchType == 'nickName'" >
+                 OR m.nick_name LIKE #{pattern}
+                      </if>
+                   </if>
+                 </trim>
+                 GROUP BY b.id
+                 ORDER BY b.id DESC
+                 LIMIT #{offset},10
+                 </script>
+                         """)
     List<Board> selectAllPaging(Integer offset, String searchType, String keyword);
 
     @Select("""
