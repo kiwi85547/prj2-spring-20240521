@@ -43,7 +43,16 @@ public class CommentService {
         return true;
     }
 
+    @PreAuthorize("isAuthenticated()")
     public void remove(Comment comment) {
         mapper.deleteById(comment.getId());
+    }
+
+    public boolean hasAccess(Comment comment, Authentication authentication) {
+        if (!authentication.getName().equals(comment.getMemberId().toString())) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

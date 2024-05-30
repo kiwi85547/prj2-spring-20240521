@@ -15,8 +15,9 @@ public interface CommentMapper {
             """)
     int insert(Comment comment);
 
+    // 여기서 조회한 내용이 commentList에 들어감
     @Select("""
-            SELECT c.id,c.comment,c.inserted,m.nick_name 
+            SELECT c.id,c.comment,c.inserted,m.nick_name, c.member_id
             FROM comment c JOIN member m ON c.member_id=m.id 
             WHERE board_id=#{boardId} ORDER BY id
             """)
