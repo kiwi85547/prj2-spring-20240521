@@ -1,18 +1,32 @@
 package com.prj2spring20240521.controller.comment;
 
 import com.prj2spring20240521.domain.comment.Comment;
+import com.prj2spring20240521.service.comment.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/comment")
 public class CommentController {
+
+    final CommentService service;
+
     @PostMapping("add")
-    public void addComment(@RequestBody Comment comment) {
+    @PreAuthorize("isAuthenticated()")
+    public String addComment(@RequestBody Comment comment, Authentication authentication) {
         System.out.println("comment = " + comment);
+        return service.add(comment, authentication);
+
+    }
+
+    @GetMapping("list/{boardId}")
+    public List<Comment> list(@PathVariable Integer boardId) {
+        System.out.println("boardId = " + boardId);
+        return service.list(boardId);
     }
 }
