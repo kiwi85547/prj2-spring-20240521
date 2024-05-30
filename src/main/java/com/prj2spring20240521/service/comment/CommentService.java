@@ -27,7 +27,7 @@ public class CommentService {
     }
 
     public List<Comment> list(Integer boardId) {
-        return mapper.selectNickByBoardId(boardId);
+        return mapper.selectAllByBoardId(boardId);
     }
 
     public boolean validate(Comment comment) {
@@ -41,5 +41,9 @@ public class CommentService {
             return false;
         }
         return true;
+    }
+
+    public void remove(Comment comment) {
+        mapper.deleteById(comment.getId());
     }
 }
