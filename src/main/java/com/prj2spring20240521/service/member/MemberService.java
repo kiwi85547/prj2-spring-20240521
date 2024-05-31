@@ -2,6 +2,7 @@ package com.prj2spring20240521.service.member;
 
 import com.prj2spring20240521.domain.board.Board;
 import com.prj2spring20240521.domain.member.Member;
+import com.prj2spring20240521.mapper.CommentMapper.CommentMapper;
 import com.prj2spring20240521.mapper.board.BoardMapper;
 import com.prj2spring20240521.mapper.member.MemberMapper;
 import com.prj2spring20240521.service.board.BoardService;
@@ -31,6 +32,7 @@ public class MemberService {
     private final JwtEncoder jwtEncoder;
     private final BoardMapper boardMapper;
     private final BoardService boardService;
+    private final CommentMapper commentMapper;
 
 
     public void add(Member member) {
@@ -86,6 +88,9 @@ public class MemberService {
 
         // 좋아요 지우기
         boardMapper.deleteLikeByMemberId(id);
+
+        // 댓글 지우기
+        commentMapper.deleteByMemberId(id);
 
         // member 테이블에서 지우기
         mapper.deleteById(id);
