@@ -40,7 +40,7 @@ public interface CommentMapper {
     int deleteByMemberId(Integer memberId);
 
     @Update("""
-            UPDATE comment SET comment=#{comment} WHERE id = #{id}
+            UPDATE comment SET inserted=now(), comment=#{comment} WHERE id = #{id}
             """)
 //    넘어온 파라미터가 객체여도 안써도 됨. comment의 {프로퍼티}
     int update(Comment comment);
