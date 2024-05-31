@@ -65,7 +65,7 @@ CREATE TABLE authority
 );
 
 INSERT INTO authority (member_id, name)
-VALUES (39, 'admin');
+VALUES (1, 'admin');
 
 INSERT INTO board (title, content, member_id)
 SELECT title, content, member_id
@@ -126,3 +126,7 @@ CREATE TABLE comment
     comment   VARCHAR(500) NOT NULL,
     inserted  DATETIME     NOT NULL DEFAULT NOW()
 );
+
+INSERT INTO board (title, content, member_id)
+SELECT title, content, member_id
+FROM board;
