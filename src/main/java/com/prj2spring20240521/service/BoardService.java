@@ -22,4 +22,17 @@ public class BoardService {
     public List<Board> list() {
         return mapper.getList();
     }
+
+    public boolean validate(Board board) {
+        if (board.getTitle() == null || board.getTitle().isBlank()) {
+            return false;
+        }
+        if (board.getContent() == null || board.getContent().isBlank()) {
+            return false;
+        }
+        if (board.getMemberId() == null || board.getMemberId().toString().isBlank()) {
+            return false;
+        }
+        return true;
+    }
 }

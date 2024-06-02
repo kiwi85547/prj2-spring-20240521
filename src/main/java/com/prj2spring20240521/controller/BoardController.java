@@ -3,6 +3,7 @@ package com.prj2spring20240521.controller;
 import com.prj2spring20240521.domain.Board;
 import com.prj2spring20240521.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,9 +16,12 @@ public class BoardController {
     private final BoardService service;
 
     @PostMapping("add")
-    public void add(@RequestBody Board board) {
-        service.add(board);
-        System.out.println("board = " + board);
+    public ResponseEntity add(@RequestBody Board board) {
+        if (service.validate(board)) {
+            service.add(board);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @GetMapping("list")
