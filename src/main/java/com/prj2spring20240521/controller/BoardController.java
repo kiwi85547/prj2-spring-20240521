@@ -33,4 +33,9 @@ public class BoardController {
     public Board board(@PathVariable Integer id) {
         return service.getBoard(id);
     }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable Integer id) {
+        service.delete(id);
+    }
 }
