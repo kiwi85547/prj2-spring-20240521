@@ -35,4 +35,8 @@ public class BoardService {
         }
         return true;
     }
+
+    public Board getBoard(Integer id) {
+        return mapper.getBoardById(id);
+    }
 }

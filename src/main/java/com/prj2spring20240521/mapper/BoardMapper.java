@@ -19,4 +19,9 @@ public interface BoardMapper {
             SELECT id,title,member_id FROM board ORDER BY id DESC
             """)
     List<Board> getList();
+
+    @Select("""
+            SELECT * FROM board WHERE id=#{id}
+            """)
+    Board getBoardById(Integer id);
 }
