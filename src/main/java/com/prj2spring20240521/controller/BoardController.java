@@ -30,12 +30,25 @@ public class BoardController {
     }
 
     @GetMapping("{id}")
-    public Board board(@PathVariable Integer id) {
-        return service.getBoard(id);
+    public ResponseEntity board(@PathVariable Integer id) {
+        if (service.getBoard(id) == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok().body(service.getBoard(id));
+        }
     }
 
     @DeleteMapping("{id}")
     public void delete(@PathVariable Integer id) {
         service.delete(id);
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity update(@PathVariable Integer id, @RequestBody Board board) {
+        if (service.validate(board)) {
+            service.update(board);
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 }

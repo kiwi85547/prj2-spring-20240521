@@ -9,7 +9,6 @@ public class Board {
     Integer id;
     String title;
     String content;
-    String nickName;
     Integer memberId;
     LocalDateTime inserted;
 }

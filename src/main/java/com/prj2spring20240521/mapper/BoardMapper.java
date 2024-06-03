@@ -1,10 +1,7 @@
 package com.prj2spring20240521.mapper;
 
 import com.prj2spring20240521.domain.Board;
-import org.apache.ibatis.annotations.Delete;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -30,4 +27,9 @@ public interface BoardMapper {
             DELETE FROM board WHERE id=#{id}
             """)
     void deleteBoardById(Integer id);
+
+    @Update("""       
+            UPDATE board SET title=#{title}, content=#{content} WHERE id=#{id}
+            """)
+    int updateById(Board board);
 }
