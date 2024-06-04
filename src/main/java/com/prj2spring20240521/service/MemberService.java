@@ -15,4 +15,14 @@ public class MemberService {
     public void signup(Member member) {
         mapper.insert(member);
     }
+
+    public boolean validate(Member member) {
+        if (member.getEmail() == null || member.getEmail().isBlank()) {
+            return false;
+        }
+        if (member.getNickName() == null || member.getNickName().isBlank()) {
+            return false;
+        }
+        return true;
+    }
 }
